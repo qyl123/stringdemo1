@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<project name="project" default="test">
+
+    <property name="run.classpath" value="bin"></property>
+
+    <property name="run.srcpath" value="src"></property>
+
+    <property name="test.srcpath" value="src"></property>
+
+    <property name="test.xml" value="xml"></property>
+
+    <property name="test.report" value="report"></property>
+
+    <property name="lib.dir" value="lib"/>
+
+    
+
+    <path id="compile.path">
+
+           <pathelement location="${lib.dir}/*.jar"/>  
+           <fileset dir="${lib.dir}">  
+    	        <include name="*.jar" />  
+    	    </fileset>
+
+   
+
+    </path>
+
+    
+
+    <target name="init">
+       <delete dir="${run.classpath}"/>
+
+       <mkdir dir="${run.classpath}"/>
+
+       <delete dir="${test.report}"/>
+
+       <mkdir dir="${test.report}"/>
+
+       <delete dir="${test.xml}"/>
+
+       <mkdir dir="${test.xml}"/>
+
+    </target>
+
+    
+
+    <target name="compile" depends="init">
+
+       <javac destdir="${run.classpath}" srcdir="${run.srcpath}"
+
+       	includeAntRuntime="false"  encoding="iso-8859-1"   classpathref="compile.path"/>
+
+       <javac destdir="${run.classpath}" srcdir="${test.srcpath}"
+
+           classpathref="compile.path"/>
+
+    </target>
+
+    <target name="test" depends="junit">
+ 
+
+    </target>
+
+    <target name="junit" depends="compile">
+
+       <junit printsummary="true">
+        <classpath >
+        	
+          <pathelement path="${run.classpath}"/>        	
+           <fileset dir="${lib.dir}">
+               <include name="*.jar"/>
+          </fileset>
+
+
+        </classpath>
+
+           <formatter type="xml"/>
+
+           <batchtest todir="${test.xml}">
+
+              <fileset dir="${run.classpath}">
+
+                  <include name="**/*StringDemoTest.java"/>
+
+              </fileset>
+
+           </batchtest>
+
+       </junit>
+
+       
+
+        <junitreport todir="${test.xml}">
+
+          <fileset dir="${test.xml}">
+
+            <include name="TEST-*.xml"/>
+
+          </fileset>
+
+          <report format="frames" todir="${test.report}"/>
+
+        </junitreport>
+
+    </target>
+
+</project>
